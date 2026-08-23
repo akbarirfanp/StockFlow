@@ -1,5 +1,5 @@
-using Microsoft.EntityFrameworkCore;
-using Scalar.AspNetCore;
+using Microsoft.EntityFrameworkCore; // Install this from NuGet Package
+using Scalar.AspNetCore; // Install this from NuGet Package
 using StockFlow.Data;
 using StockFlow.Services;
 
