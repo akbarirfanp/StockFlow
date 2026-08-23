@@ -1,13 +1,12 @@
 ﻿namespace StockFlow.Services;
-
-using StockFlow.Models;
+using StockFlow.Dtos.User;   
 
 public interface IUserService
-{
-    Task<List<User>> GetAllUsersAsync();
+{   
+    Task<List<GetUserResponse?>> GetAllUsersAsync();
     // ? means could be null
-    Task<User?> GetUserByIdAsync(Guid id);
-    Task<User> CreateUserAsync(User user);
-    Task<bool> UpdateUserAsync(Guid id, User user);
+    Task<GetUserResponse?> GetUserByIdAsync(Guid id);
+    Task<GetUserResponse?> CreateUserAsync(CreateUserRequest request);
+    Task<bool> UpdateUserAsync(Guid id, UpdateUserRequest request);
     Task<bool> DeleteUserAsync(Guid id);
 }
