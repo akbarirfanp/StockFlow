@@ -11,8 +11,20 @@ namespace StockFlow.Dtos.User
 
     public class CreateUserValidation : AbstractValidator<CreateUserRequest>
     { 
-        public CreateUserValidation() { 
+        public CreateUserValidation() {
+            RuleFor(x => x.Name)
+                .NotEmpty().WithMessage("Name is required")
+                .MaximumLength(64);
+            RuleFor(x => x.Email)
+                .NotEmpty().WithMessage("Email is required")
+                .EmailAddress().WithMessage("Invalid email format");
+            RuleFor(x => x.Password)
+                .NotEmpty().WithMessage("Password is required");
         }
     }
 
 }
+
+
+
+
