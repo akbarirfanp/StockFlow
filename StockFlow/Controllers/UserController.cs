@@ -1,10 +1,9 @@
-﻿using Microsoft.AspNetCore.Http;
-using StockFlow.Models;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using StockFlow.Services;
-using System.Reflection.PortableExecutable;
 using StockFlow.Dtos.User;
 using StockFlow.Dtos;
+using FluentValidation;
+using Microsoft.Extensions.Validation;
 
 namespace StockFlow.Controllers
 {
@@ -28,8 +27,24 @@ namespace StockFlow.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<GetUserResponse>> CreateUser(CreateUserRequest request)
+        public async Task<ActionResult<GetUserResponse>> CreateUser(CreateUserRequest request, IValidator<CreateUserRequest> validator)
         {
+            var validationResult = await validator.ValidateAsync(request);
+            if(!validationResult.IsValid)
+            {
+                return BadRequest(new ErrorResponse<object>
+                {
+                    Status = StatusCodes.Status400BadRequest,
+                    Message = "Validation failed",
+                    Errors = validationResult.Errors
+                        .GroupBy(e => e.PropertyName)
+                        .ToDictionary(
+                            g => g.Key,
+                            g => g.Select(e => e.ErrorMessage).ToArray()
+                        )
+                });
+            }
+
             var createdUser = await service.CreateUserAsync(request);
             return CreatedAtAction(nameof(GetUser), new { id = createdUser.Id }, createdUser);
         }
@@ -42,20 +57,19 @@ namespace StockFlow.Controllers
         }
 
         [HttpDelete("{id}")]
-            public async Task<ActionResult<ResponseAPI<object>>> DeleteUser(Guid id)
+            public async Task<ActionResult> DeleteUser(Guid id)
             {
                 var deletedUser = await service.DeleteUserAsync(id);
                 if (!deletedUser)
                 {
-                return NotFound(new ResponseAPI<object>
+                return NotFound(new ErrorResponse<object>
                 {
-                    Error = true,
                     Status = StatusCodes.Status404NotFound,
-                    Message = "User with the given Id was not found"
+                    Message = "User with given Id was not found"
                 });
                 }
 
-                return Ok(new ResponseAPI<object>
+                return Ok(new SuccessResponse<object>
                 {
                     Error = false,
                     Status = StatusCodes.Status200OK,
