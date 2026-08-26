@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using StockFlow.Services;
 using StockFlow.Dtos.User;
 using StockFlow.Dtos;
 using FluentValidation;
 using Microsoft.Extensions.Validation;
+using StockFlow.Services.User;
 
 namespace StockFlow.Controllers
 {
@@ -27,7 +27,7 @@ namespace StockFlow.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<GetUserResponse>> CreateUser(CreateUserRequest request, IValidator<CreateUserRequest> validator)
+        public async Task<ActionResult<CreateUserResponse>> CreateUser(CreateUserRequest request, IValidator<CreateUserRequest> validator)
         {
             var validationResult = await validator.ValidateAsync(request);
             if(!validationResult.IsValid)
