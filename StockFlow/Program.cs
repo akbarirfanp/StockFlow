@@ -3,9 +3,9 @@ using Microsoft.EntityFrameworkCore; // Install this from NuGet Package
 using Scalar.AspNetCore; // Install this from NuGet Package
 using StockFlow.Data;
 using StockFlow.Dtos.User;
-using StockFlow.Services;
 using Serilog;
 using Serilog.Sinks.Elasticsearch;
+using StockFlow.Services.User;
 
 var builder = WebApplication.CreateBuilder(args);
 
